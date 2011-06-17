@@ -41,22 +41,6 @@ require_once($CFG->dirroot . '/question/type/questiontypebase.php');
 
 /// CONSTANTS ///////////////////////////////////
 
-/**#@+
- * The core question types.
- */
-define("SHORTANSWER",   "shortanswer");
-define("TRUEFALSE",     "truefalse");
-define("MULTICHOICE",   "multichoice");
-define("RANDOM",        "random");
-define("MATCH",         "match");
-define("RANDOMSAMATCH", "randomsamatch");
-define("DESCRIPTION",   "description");
-define("NUMERICAL",     "numerical");
-define("MULTIANSWER",   "multianswer");
-define("CALCULATED",    "calculated");
-define("ESSAY",         "essay");
-/**#@-*/
-
 /**
  * Constant determines the number of answer boxes supplied in the editing
  * form for multiple choice and similar question types.
@@ -1830,4 +1814,27 @@ function question_make_export_url($contextid, $categoryid, $format, $withcategor
     return moodle_url::make_file_url($urlbase,
             "/$contextid/question/export/{$categoryid}/{$format}/{$withcategories}" .
             "/{$withcontexts}/{$filename}", true);
+}
+
+/**
+ * Return a list of page types
+ * @param string $pagetype current page type
+ * @param stdClass $parentcontext Block's parent context
+ * @param stdClass $currentcontext Current context of block
+ */
+function question_pagetypelist($pagetype, $parentcontext, $currentcontext) {
+    global $CFG;
+    $types = array(
+        'question-*'=>get_string('page-question-x', 'question'),
+        'question-edit'=>get_string('page-question-edit', 'question'),
+        'question-category'=>get_string('page-question-category', 'question'),
+        'question-export'=>get_string('page-question-export', 'question'),
+        'question-import'=>get_string('page-question-import', 'question')
+    );
+    if ($currentcontext->contextlevel == CONTEXT_COURSE) {
+        require_once($CFG->dirroot . '/course/lib.php');
+        return array_merge(course_pagetypelist($pagetype, $parentcontext, $currentcontext), $types);
+    } else {
+        return $types;
+    }
 }
