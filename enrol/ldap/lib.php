@@ -526,7 +526,7 @@ class enrol_ldap_plugin extends enrol_plugin {
 
                         $transaction = $DB->start_delegated_transaction();
                         foreach ($ldapmembers as $ldapmember) {
-                            $sql = 'SELECT id,username,1 FROM {user} WHERE idnumber = ? AND deleted = 0';
+                            $sql = 'SELECT id,username,1 FROM {user} WHERE username = ? AND deleted = 0';
                             $member = $DB->get_record_sql($sql, array($ldapmember));
                             if(empty($member) || empty($member->id)){
                                 print_string ('couldnotfinduser', 'enrol_ldap', $ldapmember);
